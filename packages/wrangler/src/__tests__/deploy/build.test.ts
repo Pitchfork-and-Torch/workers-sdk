@@ -92,6 +92,43 @@ describe("deploy", () => {
 		clearOutputFilePath();
 	});
 
+	it.for(["", " --minify"])(
+		'should keep the "use retry" directive in Durable Object methods (flags:%s)',
+		async (flags, { expect }) => {
+			writeWranglerConfig({ main: "index.ts" });
+			fs.writeFileSync(
+				"index.ts",
+				`
+					import { DurableObject } from "cloudflare:workers";
+
+					export class Counter extends DurableObject {
+						async reset(): Promise<void> {
+							"use retry";
+							await this.ctx.storage.put("n", 0);
+						}
+
+						async fetch(): Promise<Response> {
+							'use retry';
+							return new Response("ok");
+						}
+					}
+
+					export default {
+						fetch() {
+							return new Response("ok");
+						},
+					};
+				`
+			);
+
+			await runWrangler(`deploy --dry-run --outdir dist${flags}`);
+			const output = fs.readFileSync("dist/index.js", "utf-8");
+
+			expect(output).toMatch(/async reset\(\)\s*\{\s*["']use retry["']/);
+			expect(output).toMatch(/async fetch\(\)\s*\{\s*["']use retry["']/);
+		}
+	);
+
 	describe("[define]", () => {
 		it("should be able to define values that will be substituted into top-level identifiers", async ({
 			expect,
