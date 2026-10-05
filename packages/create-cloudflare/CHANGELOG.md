@@ -1,5 +1,25 @@
 # create-cloudflare
 
+## 2.73.3
+
+### Patch Changes
+
+- [#16060](https://github.com/cloudflare/workers-sdk/pull/16060) [`17c6c0d`](https://github.com/cloudflare/workers-sdk/commit/17c6c0dfa38e620cf9e569516db41f58baab472f) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependencies of "create-cloudflare"
+
+  The following dependency versions have been updated:
+
+  | Dependency      | From   | To     |
+  | --------------- | ------ | ------ |
+  | @angular/create | 22.2.0 | 22.2.1 |
+
+- [#16061](https://github.com/cloudflare/workers-sdk/pull/16061) [`f8093b7`](https://github.com/cloudflare/workers-sdk/commit/f8093b7c1bf5288a6c35d8add105719545d0fcaf) Thanks [@dependabot](https://github.com/apps/dependabot)! - Update dependencies of "create-cloudflare"
+
+  The following dependency versions have been updated:
+
+  | Dependency    | From   | To     |
+  | ------------- | ------ | ------ |
+  | @tanstack/cli | 0.71.0 | 0.71.1 |
+
 ## 2.73.2
 
 ### Patch Changes

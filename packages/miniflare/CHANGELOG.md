@@ -1,5 +1,32 @@
 # miniflare
 
+## 5.20261001.1-alpha
+
+### Minor Changes
+
+- [#15998](https://github.com/cloudflare/workers-sdk/pull/15998) [`b75421f`](https://github.com/cloudflare/workers-sdk/commit/b75421fcd5b2d8208cefb38882479773a7387df4) Thanks [@dario-piotrowicz](https://github.com/dario-piotrowicz)! - Add `assets.base_path` support to Workers Assets
+
+  Serve an asset directory from a public URL prefix without changing its on-disk layout:
+
+  ```jsonc
+  {
+    "assets": {
+      "directory": "./public",
+      "base_path": "/docs"
+    }
+  }
+  ```
+
+  Wrangler, preview, Miniflare, and generated build configuration preserve the explicitly selected value, while the Asset Worker normalizes it and strips the prefix only for asset lookup. Requests passed to a user Worker, request-facing headers, and redirects retain the public path. Relative pathname inputs are interpreted as root-relative prefixes, URL-shaped values are rejected, and omitting the option preserves existing root-path behavior.
+
+  Authored `_headers` and `_redirects` rules continue to match full public paths. In particular, both the source and destination of an authored `200` asset rewrite must include the configured public prefix; Asset Worker-generated redirects are prefixed automatically.
+
+- [#15330](https://github.com/cloudflare/workers-sdk/pull/15330) [`f8cdcb9`](https://github.com/cloudflare/workers-sdk/commit/f8cdcb920fc44daf7bf4ef9cb1dce751313ac2bd) Thanks [@akshitsinha](https://github.com/akshitsinha)! - Manage local Flagship flags in Local Explorer
+
+  Bound Flagship apps now appear in Local Explorer. You can create, edit, toggle, delete, and evaluate flags against the same local store used by your Worker, including targeting conditions and percentage rollouts.
+
+  Explorer requests are routed to the development process that owns each app, so Flagship management also works across multiple local Workers.
+
 ## 5.20261001.0-alpha
 
 ### Minor Changes
