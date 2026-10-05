@@ -1,5 +1,5 @@
 import { isNonInteractiveOrCI } from "@cloudflare/workers-utils";
-import type { OAuthFlowContext } from "../context";
+import type { StatusLogger } from "../context";
 
 /**
  * Build the temporary-preview-account terms prompt used by the OAuth flow's
@@ -11,7 +11,7 @@ import type { OAuthFlowContext } from "../context";
  * while the terms-acceptance logic lives here.
  */
 export function createTemporaryTermsPrompt(deps: {
-	logger: OAuthFlowContext["logger"];
+	logger: StatusLogger;
 	prompt: (question: string) => Promise<string>;
 }): (question: string, notice: string) => Promise<boolean> {
 	const { logger, prompt } = deps;

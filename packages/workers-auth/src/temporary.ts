@@ -10,7 +10,7 @@ import type {
 	TemporaryAccountStorage,
 	TemporaryPreviewAccount,
 } from "./config-file/temporary";
-import type { OAuthFlowLogger, TemporaryAccountRequest } from "./context";
+import type { StatusLogger, TemporaryAccountRequest } from "./context";
 import type { PowSolution } from "./pow";
 
 export const TEMPORARY_TERMS_URLS = {
@@ -202,9 +202,7 @@ type PowChallengeResponse = {
 
 // Requests a proof-of-work challenge and solves it. The challenge is required:
 // any failure aborts provisioning.
-async function requestPowSolution(
-	logger: OAuthFlowLogger
-): Promise<PowSolution> {
+async function requestPowSolution(logger: StatusLogger): Promise<PowSolution> {
 	const response = await fetch(getTemporaryPreviewChallengeUrl(), {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
@@ -269,7 +267,7 @@ async function requestPowSolution(
  * endpoint
  */
 export async function createTemporaryPreviewAccount(
-	logger: OAuthFlowLogger,
+	logger: StatusLogger,
 	request?: TemporaryAccountRequest
 ): Promise<TemporaryPreviewAccount> {
 	const pow = await requestPowSolution(logger);
@@ -365,7 +363,7 @@ export async function createTemporaryPreviewAccount(
 export async function getOrCreateTemporaryPreviewAccount(options: {
 	storage: TemporaryAccountStorage;
 	prompt: (question: string, notice: string) => Promise<boolean>;
-	logger: OAuthFlowLogger;
+	logger: StatusLogger;
 	request?: TemporaryAccountRequest;
 }): Promise<{
 	account: TemporaryPreviewAccount;

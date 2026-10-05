@@ -37,7 +37,7 @@ import { createPreferences } from "./preferences";
 import { createTemporaryTermsPrompt } from "./temporary-terms";
 import type { UserAuthConfig } from "../config-file/auth";
 import type { TemporaryPreviewAccount } from "../config-file/temporary";
-import type { TemporaryAccountRequest } from "../context";
+import type { StatusLogger, TemporaryAccountRequest } from "../context";
 import type { CredentialStore } from "../credential-store";
 import type {
 	LoginOrRefreshFailureReason,
@@ -165,7 +165,7 @@ function notLoggedInErrorBodies(
 }
 
 function logTemporaryPreviewAccount(
-	logger: AuthContext["logger"],
+	logger: StatusLogger,
 	temporaryPreviewAccount: TemporaryPreviewAccount,
 	cached: boolean
 ): void {
@@ -192,6 +192,7 @@ export function createCloudflareAuth(
 	ctx: AuthContext
 ): CloudflareAuth {
 	const { logger } = ctx;
+	const statusLogger = ctx.statusLogger ?? logger;
 	const cliName = descriptor.cliName;
 	const NOT_LOGGED_IN_ERROR_BODIES = notLoggedInErrorBodies(
 		descriptor.commands.login
@@ -261,7 +262,11 @@ export function createCloudflareAuth(
 				descriptor.fileFormat,
 				descriptor.getTemporaryAccountConfigPath
 			),
-			prompt: createTemporaryTermsPrompt({ logger, prompt: ctx.prompt }),
+			prompt: createTemporaryTermsPrompt({
+				logger: statusLogger,
+				prompt: ctx.prompt,
+			}),
+			logger: statusLogger,
 		},
 	});
 
@@ -602,7 +607,7 @@ ${accounts
 
 			const { account: temporaryPreviewAccount, cached } =
 				await oauthFlow.activateTemporaryAccount();
-			logTemporaryPreviewAccount(logger, temporaryPreviewAccount, cached);
+			logTemporaryPreviewAccount(statusLogger, temporaryPreviewAccount, cached);
 			return temporaryPreviewAccount.account.id;
 		}
 

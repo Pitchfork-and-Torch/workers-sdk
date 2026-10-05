@@ -19,6 +19,11 @@ export interface OAuthFlowTemporaryContext {
 	 *    always return true
 	 */
 	prompt: (question: string, notice: string) => Promise<boolean>;
+	/**
+	 * Where progress messages emitted while provisioning go (for example the
+	 * proof-of-work notice).
+	 */
+	logger: StatusLogger;
 }
 
 /** Optional provisioning inputs for a newly-created temporary account. */
@@ -43,6 +48,13 @@ export interface OAuthConsentPages {
  * Consumers pass in an implementation that maps to their own logging surface.
  */
 export type OAuthFlowLogger = Logger;
+
+/**
+ * Sink for status messages that are not part of a command's output, such as
+ * temporary-account notices. A CLI can route these to stderr so they never
+ * mix with output written to stdout (JSON, piped object contents, …).
+ */
+export type StatusLogger = Pick<OAuthFlowLogger, "log">;
 
 /**
  * Dependency-injection surface for {@link createOAuthFlow}.
